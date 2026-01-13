@@ -1,0 +1,38 @@
+# code: language=yaml
+#
+# Helm release for GitHub Actions Runner Controller
+#
+
+{{- $arc := $state.githubARC }}
+
+---
+apiVersion: helm.m.crossplane.io/v1beta1
+kind: Release
+metadata:
+  name: {{ $arc.releaseName }}
+  annotations:
+    {{ setResourceNameAnnotation "helm-release-github-arc" }}
+  labels: {{ $arc.labels | toJson }}
+spec:
+  managementPolicies: {{ $arc.managementPolicies | toJson }}
+  forProvider:
+    chart:
+      name: gha-runner-scale-set-controller
+      repository: oci://ghcr.io/actions/actions-runner-controller-charts
+      version: 0.10.1
+    namespace: {{ $arc.namespace }}
+    {{- if $arc.overrideAllValues }}
+    values:
+      {{- toYaml $arc.overrideAllValues | nindent 6 }}
+    {{- else }}
+    values:
+      fullnameOverride: gha-runner-scale-set-controller
+      nameOverride: gha-runner-scale-set-controller
+      {{- if $arc.values }}
+      {{- toYaml $arc.values | nindent 6 }}
+      {{- end }}
+    {{- end }}
+  rollbackLimit: 3
+  providerConfigRef:
+    name: {{ $arc.providerConfigRef.name }}
+    kind: {{ $arc.providerConfigRef.kind }}

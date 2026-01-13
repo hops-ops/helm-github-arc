@@ -1,0 +1,12 @@
+apiVersion: helm.hops.ops.com.ai/v1alpha1
+kind: GitHubARC
+metadata:
+  name: github-arc
+  namespace: example-env
+spec:
+  clusterName: example-cluster
+  labels:
+    team: platform
+  namespace: arc-systems
+  values:
+    replicaCount: 2
