@@ -24,7 +24,7 @@ _items = [
             # Helm ProviderConfig - assumes cluster kubeconfig is available
             extraResources = [
                 {
-                    apiVersion = "helm.crossplane.io/v1beta1"
+                    apiVersion = "helm.m.crossplane.io/v1beta1"
                     kind = "ProviderConfig"
                     metadata = {
                         name = "default"
