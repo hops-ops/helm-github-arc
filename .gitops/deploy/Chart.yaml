@@ -2,4 +2,4 @@ apiVersion: v2
 name: helm-github-arc
 version: 0.0.0
 description: GitOps packaging for the GitHub Actions Runner Controller Crossplane configuration
-appVersion: 0.10.1
+appVersion: 0.13.1

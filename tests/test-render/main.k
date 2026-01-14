@@ -11,7 +11,7 @@ import models.k8s.apimachinery.pkg.apis.meta.v1 as metav1
 
 _items = [
     # ==========================================================================
-    # Test 1: Minimal input renders Helm release with name defaulting to XR name
+    # Test 1: Minimal input renders Helm release
     # ==========================================================================
     metav1alpha1.CompositionTest {
         metadata.name = "minimal-renders-helm-release"
@@ -23,16 +23,14 @@ _items = [
             xr = {
                 apiVersion = "helm.hops.ops.com.ai/v1alpha1"
                 kind = "GitHubARC"
-                metadata.name = "test-github-arc"
-                spec = {
-                    clusterName = "test-cluster"
-                }
+                metadata.name = "test-arc"
+                spec = {}
             }
             assertResources = [
                 {
                     apiVersion = "helm.m.crossplane.io/v1beta1"
                     kind = "Release"
-                    metadata.name = "test-github-arc"
+                    metadata.name = "test-arc"
                 }
             ]
         }
@@ -51,9 +49,8 @@ _items = [
             xr = {
                 apiVersion = "helm.hops.ops.com.ai/v1alpha1"
                 kind = "GitHubARC"
-                metadata.name = "labeled-github-arc"
+                metadata.name = "labeled-arc"
                 spec = {
-                    clusterName = "test-cluster"
                     labels = {
                         team = "platform"
                         environment = "staging"
@@ -65,10 +62,10 @@ _items = [
                     apiVersion = "helm.m.crossplane.io/v1beta1"
                     kind = "Release"
                     metadata = {
-                        name = "labeled-github-arc"
+                        name = "labeled-arc"
                         labels = {
                             "hops.ops.com.ai/managed" = "true"
-                            "hops.ops.com.ai/githubarc" = "labeled-github-arc"
+                            "hops.ops.com.ai/githubarc" = "labeled-arc"
                             team = "platform"
                             environment = "staging"
                         }
@@ -93,7 +90,6 @@ _items = [
                 kind = "GitHubARC"
                 metadata.name = "override-test"
                 spec = {
-                    clusterName = "my-cluster"
                     overrideAllValues = {
                         fullnameOverride = "custom-arc"
                         replicaCount = 3
@@ -109,6 +105,33 @@ _items = [
                         fullnameOverride = "custom-arc"
                         replicaCount = 3
                     }
+                }
+            ]
+        }
+    }
+
+    # ==========================================================================
+    # Test 4: Default namespace is arc-systems
+    # ==========================================================================
+    metav1alpha1.CompositionTest {
+        metadata.name = "default-namespace-arc-systems"
+        spec = {
+            compositionPath = "apis/githubarcs/composition.yaml"
+            xrdPath = "apis/githubarcs/definition.yaml"
+            timeoutSeconds = 60
+            validate = False
+            xr = {
+                apiVersion = "helm.hops.ops.com.ai/v1alpha1"
+                kind = "GitHubARC"
+                metadata.name = "ns-test"
+                spec = {}
+            }
+            assertResources = [
+                {
+                    apiVersion = "helm.m.crossplane.io/v1beta1"
+                    kind = "Release"
+                    metadata.name = "ns-test"
+                    spec.forProvider.namespace = "arc-systems"
                 }
             ]
         }

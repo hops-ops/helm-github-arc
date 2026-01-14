@@ -19,7 +19,7 @@ spec:
     chart:
       name: gha-runner-scale-set-controller
       repository: oci://ghcr.io/actions/actions-runner-controller-charts
-      version: 0.10.1
+      version: 0.13.1
     namespace: {{ $arc.namespace }}
     {{- if $arc.overrideAllValues }}
     values:
