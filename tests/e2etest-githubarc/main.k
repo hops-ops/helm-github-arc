@@ -19,16 +19,17 @@ _items = [
         metadata.name = "githubarc-e2e"
         spec = {
             crossplane.autoUpgrade.channel = "Rapid"
-            defaultConditions = ["Ready"]
             skipDelete = False
-            timeoutSeconds = 600
 
             # Helm ProviderConfig - assumes cluster kubeconfig is available
             extraResources = [
                 {
-                    apiVersion = "helm.m.crossplane.io/v1beta1"
+                    apiVersion = "helm.crossplane.io/v1beta1"
                     kind = "ProviderConfig"
-                    metadata.name = "default"
+                    metadata = {
+                        name = "default"
+                        namespace = "default"
+                    }
                     spec = {
                         credentials = {
                             source = "InjectedIdentity"
