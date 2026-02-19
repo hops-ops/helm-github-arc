@@ -24,13 +24,9 @@ spec:
     {{- if $arc.overrideAllValues }}
     values:
       {{- toYaml $arc.overrideAllValues | nindent 6 }}
-    {{- else }}
+    {{- else if $arc.values }}
     values:
-      fullnameOverride: gha-runner-scale-set-controller
-      nameOverride: gha-runner-scale-set-controller
-      {{- if $arc.values }}
       {{- toYaml $arc.values | nindent 6 }}
-      {{- end }}
     {{- end }}
   rollbackLimit: 3
   providerConfigRef:
